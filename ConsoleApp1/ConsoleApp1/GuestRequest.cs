@@ -13,7 +13,7 @@ namespace ConsoleApp1
       public bool IsApproveed;
         public override string ToString()
         {
-            return "Entry Date: " + EntryDate.Year.ToString() +'.' +EntryDate.Month.ToString()+EntryDate.Day.ToString()+" Release Date: " + ReleaseDate.Year.ToString() +ReleaseDate.Month.ToString()+ReleaseDate.Day.ToString()+ " is approved: " + IsApproveed;
+            return "Entry Date: " + EntryDate.Day.ToString() + '.' + EntryDate.Month.ToString()+" Release Date: "  +ReleaseDate.Day.ToString() + '.' + ReleaseDate.Month.ToString()+ " is approved: " + IsApproveed;
 
         }
         public GuestRequest()
