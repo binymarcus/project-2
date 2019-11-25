@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,35 +7,58 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-    class HostingUnit
+    class HostingUnit:IComparable
     {
         private static long stSerialKey = 10000000;
         public readonly long HostingUnitKey;
         bool[,] Diary = new bool[12,31];
-public bool this[DateTime date] //property (getter/setter)
+        /// <summary>
+        /// getter ansd setter like ordered
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns>returns the date and month </returns>
+        public bool this[DateTime date] 
         {
             get { return Diary[date.Month, date.Day]; }
             set { Diary[date.Month, date.Day] = value; }
         }
-
-        public HostingUnit() // constrocter
+        /// <summary>
+        /// default constructor, sets the hostingunitkey to the static key, and sets all the dates to false
+        /// </summary>
+        public HostingUnit() 
         {
-            HostingUnitKey = ++stSerialKey; // this way each hosting unit has a diffrent serial key
+            HostingUnitKey = ++stSerialKey; 
 
-            DateTime date = new DateTime(1, 1, 2020); //indexer
+            DateTime date = new DateTime(1, 1, 2020); 
             for (; date.Year == 2020; date.AddDays(1))
             {
-                this[date] = false; //initialize as false
+                this[date] = false; 
             }
         }
-        public override string ToString()// override for tostring, print the serial number then the start and end date of each vacation
+        /// <summary>
+        /// override for tostring like the roders
+        /// </summary>
+        /// <returns>returns the serial key and the dates of each vacation</returns>
+        public override string ToString()
         {
-           
+            ArrayList date = VacationDates();
+            string temp = "serial number: {0} , list of dates:  ",HostingUnitKey;
+            for (int i = 0; i < date.Count; i+=4)
+            {
+                temp += " start date: " + (int)date[i] + 1 + "." + (int)date[i + 1] + 1 + " end date: " + (int)date[i + 2] + 1 + "." + (int)date[i + 3] + 1;
+               // temp += " start date:{0}.{1}, end date:{2}.{3}",(int)date[i] + 1,(int)date[i + 1] + 1,(int)date[i + 2] + 1,(int)date[i + 3] + 1;
+            }
+            temp += "\n";
+            return temp;
         }
-        private string VacationDates()//returns list of dates of occupied days (start and end)
+        /// <summary>
+        /// function we added to make life easier calculates the date of each stay using an arraylist
+        /// </summary>
+        /// <returns>retuns an arraylist of all the dates</returns>
+        private ArrayList VacationDates()
         {
             bool occupied = false;
-            string Dates;
+            ArrayList Dates=new ArrayList();
             for (int i = 0; i < 12; i++)
             {
                 int stop;
@@ -52,6 +76,40 @@ public bool this[DateTime date] //property (getter/setter)
                 }
             }
             return Dates;
+        }
+        /// <summary>
+        /// calculates the amount of dates
+        /// </summary>
+        /// <returns>returns the number of days</returns>
+        public int GetAnnualBusyDays()
+        {
+            int count = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                for (int j = 0; j < 31; j++)
+                {
+                    if (Diary[i, j] == true)
+                        count++;
+                }
+            }
+            return count;
+        }
+        /// <summary>
+        /// uses the number of days to calculate the percentage
+        /// </summary>
+        /// <returns>returns the days  used devided by the general population</returns>
+        public float GetAnnualBusyPercentage()
+        {
+            return (GetAnnualBusyDays() / 372) * 100;
+        }
+        /// <summary>
+        /// gives the abillity to compare betwen two hosting units
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>returns a 0 or 1 depending on the outcome</returns>
+        public int CompareTo(object obj)
+        {
+            return GetAnnualBusyDays().CompareTo(((HostingUnit)obj).GetAnnualBusyDays()); 
         }
     }
 }

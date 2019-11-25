@@ -10,8 +10,9 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            GuestRequest guest = new GuestRequest();
-            Console.WriteLine(guest.ToString());
+            string tester = " help me figure this out\n";
+            tester += "help";
+            Console.WriteLine(tester);
             Console.Read();
         }
     }
